@@ -11,7 +11,7 @@
 from flask import Flask, request, Response, render_template, session
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from json import dumps, loads
 from requests import get, post
 from fhir.resources.parameters import Parameters as P
@@ -29,10 +29,12 @@ app.secret_key = 'my_secret_key'
 
 my_base = 'https://server.subscriptions.argo.run/r4'
 my_pub =  my_base
-my_sub_endpt = "https://www.pythonanywhere.com/user/ehaas/webapps/#tab_id_flask-pubsub-endpoint_healthedata1_co/webhook"
-my_sub_endpt = 'localhost:5000/webhook'
+my_sub_endpt = "http://flask-pubsub-endpoint.healthedata1.co/webhook"
+#my_sub_endpt = 'localhost:5000/webhook'
 my_patients = [
-
+"Patient/06e1f0dd-5fbe-4480-9bb4-6b54ec02d31b",
+"Patient/b1cf5f57-b061-4b7f-aa9d-6283a121694b",
+"Patient/aad0894e-47f4-4ffc-8fab-8fe5487110d2",
 ]
 
 params = {
@@ -62,6 +64,14 @@ def fetch(my_base,my_type,my_id,ver=None):
 
 # ***********************Subscribe ********************
 def my_sub(my_pub,topic):
+    my_sub = t.base_sub
+    now = datetime.now()
+    future = now + timedelta(30) # update time = default to 30 days
+    my_sub['end']=future.isoformat()
+    # .channel.endpoint = harcode for now
+    # .criteria = Encounter?patient=Patient/ID patient hard code but make a picker
+    # .extension[0].valueUri = topic from list ...todo
+
     app.logger.info(f'URL = {my_pub}/Subscription\n headers = {headers}\n t.base_sub = {t.base_sub}')
     with post(f'{my_pub}/Subscription', headers=headers, data=dumps(t.base_sub)) as r:
         try:
@@ -79,7 +89,7 @@ def topic_list():
     fr_topic_list = P.parse_obj(topic_list)
     app.logger.info(f"fr_topic_list.yaml(indent=True)={fr_topic_list.yaml(indent=True)}")
     session['my_topics'] = [i.valueCanonical for i in fr_topic_list.parameter
-        if i.name == 'subscription-topic-canonical']
+        if i.name == 'subscription-topic-canonical']  # todo save from set as csv file for sharing with other apps
     return render_template('$topic-list.html',
         topic_list=fr_topic_list.yaml(indent=True),my_topics=session['my_topics'], my_pub=my_pub)
 
@@ -89,15 +99,7 @@ def subscribe():
     my_subs = [my_sub(my_pub,topic) for topic in session['my_topics']]
 
     my_subs = [S.parse_obj(my_sub) for my_sub in my_subs]
-    '''list:
-    status  {{my_sub.status}}
-    - id:
-    - patient:
-    - topic:
-    - payload:
-    - endpoint:
-    - expiration date:
-    '''
+
     return render_template('subscribed.html',my_subs=my_subs, my_pub=my_pub)
 
 
