@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<p align="center">
+  <a href="/">
+    <button class="button">Home</button>
+  </a>
+</p>
+<div class="wrapper">
+<div class="card">
+<h3> Topics Found From Publisher = <code>{{my_pub}} </h3>
+
+<pre style="background-color:#f1f1f1;">
+{{topic_list}}
+</pre>
+</div>
+</div>
+
+<!-- {{my_topics}} -->
+
+<p align="center">
+  <a href="/Subscribe">
+    <button class="button">Subscribe</button>
+  </a>
+</p>
+
+
+<hr />
+{% endblock %}

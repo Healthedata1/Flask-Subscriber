@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="wrapper">
+<div class="card">
+<h3> Publisher = <code>{{my_pub}}</code> </h3>
+
+<h3> Subscriptions...</h3>
+{% for my_sub in my_subs %}
+<h4 align="center">Subscription #{{loop.index}}</h4>
+<p>
+<ul>
+  <li>id: {{my_sub.id}}</li>
+  <li>status = {{my_sub.status}}</li>
+  <!-- <li>patient: </li> -->
+  <li>topic: {{my_sub.extension[0].valueUri}}</li>
+  <li>payload: {{my_sub.channel.payload__ext.extension[0].valueCode}}</li>
+  <li>endpoint: {{my_sub.channel.endpoint}}</li>
+  <li>expiration date: {{my_sub.end}}</li>
+</ul>
+<hr/>
+{% endfor %}
+</div>
+</div>
+<p align="center">
+  <a href="/">
+    <button class="button">Home</button>
+  </a>
+</p>
+{% endblock %}

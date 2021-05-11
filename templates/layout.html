@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+<head>
+<title>Flask pubsub endpoint</title>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<div class="header">
+  <div style="align-items: center; padding-top: 1%; padding-left: 1%; padding-right: 1%; height: auto;">
+    <img height="43 px" src="{{ url_for('static', filename='da-vinci_logo.jpeg') }}" width="auto" style="float: left;">
+      <img height="43 px" src="{{ url_for('static', filename='fhir-logo-www.png') }}" width="auto" style="float: right;">
+        <h1 class="header-title">Subscription Topic Finder</h1>
+      </div>
+      <p class="header-description">Da Vinci Notifications project is planning to adopt the updated FHIR Subscriptions framework. This Dashboard demonstrates using subscriptions to notify a careteam member of ADT events.</p>
+    </div>
+
+<body>
+{% block body %}{% endblock %}
+</body>
+
+</html
