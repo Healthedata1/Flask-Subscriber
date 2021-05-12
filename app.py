@@ -32,9 +32,9 @@ my_pub =  my_base
 my_sub_endpt = "http://flask-pubsub-endpoint.healthedata1.co/webhook"
 #my_sub_endpt = 'localhost:5000/webhook'
 my_patients = [
-"Patient/06e1f0dd-5fbe-4480-9bb4-6b54ec02d31b",
-"Patient/b1cf5f57-b061-4b7f-aa9d-6283a121694b",
-"Patient/aad0894e-47f4-4ffc-8fab-8fe5487110d2",
+"06e1f0dd-5fbe-4480-9bb4-6b54ec02d31b",
+"b1cf5f57-b061-4b7f-aa9d-6283a121694b",
+"aad0894e-47f4-4ffc-8fab-8fe5487110d2",
 ]
 
 params = {
@@ -68,13 +68,15 @@ def my_sub(my_pub,topic):
     now = datetime.now()
     future = now + timedelta(30) # update time = default to 30 days
     my_sub['end']=future.isoformat()
-    # .channel.endpoint = harcode for now
+    my_sub['channel']['endpoint']= my_sub_endpt # .channel.endpoint = hardcode for now
     # .criteria = Encounter?patient=Patient/ID patient hard code but make a picker
+    my_sub['criteria']=f'Encounter?patient=Patient/{my_patients[0]}'
     # .extension[0].valueUri = topic from list ...todo
 
-    app.logger.info(f'URL = {my_pub}/Subscription\n headers = {headers}\n t.base_sub = {t.base_sub}')
-    with post(f'{my_pub}/Subscription', headers=headers, data=dumps(t.base_sub)) as r:
+    app.logger.info(f'URL = {my_pub}/Subscription\n headers = {headers}\n my_sub = {my_sub}')
+    with post(f'{my_pub}/Subscription', headers=headers, data=dumps(my_sub)) as r:
         try:
+            app.logger.info(f'r.status = {r.status_code}\n response body = {r.json()}')
             return r.json()
         except Exception as e:
             app.logger.info(f'r.status = {r.status_code}')

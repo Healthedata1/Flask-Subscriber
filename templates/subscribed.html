@@ -11,8 +11,8 @@
 <ul>
   <li>id: {{my_sub.id}}</li>
   <li>status = {{my_sub.status}}</li>
-  <!-- <li>patient: </li> -->
   <li>topic: {{my_sub.extension[0].valueUri}}</li>
+  <li>criteria: {{my_sub.criteria}}</li>
   <li>payload: {{my_sub.channel.payload__ext.extension[0].valueCode}}</li>
   <li>endpoint: {{my_sub.channel.endpoint}}</li>
   <li>expiration date: {{my_sub.end}}</li>
